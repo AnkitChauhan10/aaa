@@ -26,7 +26,7 @@ public class SwaggerConfig {
                 DocumentationType.SWAGGER_2)
                 .globalOperationParameters(getParameters())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.trs.cc.notification.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.trs.cc.sponsor.controller"))
                 .paths(PathSelectors.regex("/*.*"))
                 .build()
                 .pathProvider(new ExtendRelativePathProvider())
