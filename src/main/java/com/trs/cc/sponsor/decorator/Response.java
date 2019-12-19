@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
-import static com.trs.cc.notification.constant.ResponseConstant.*;
+import static com.trs.cc.sponsor.constant.ResponseConstant.*;
 
 @JsonRootName ( value = "status")
 @Getter

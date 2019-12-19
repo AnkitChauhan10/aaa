@@ -1,29 +1,17 @@
 package com.trs.cc.sponsor.utils;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.trs.cc.notification.exception.NotFoundException;
-import com.trs.cc.notification.model.NotificationAPI;
-import com.trs.cc.notification.model.NotificationAdminConfiguration;
+import com.trs.cc.sponsor.exception.NotFoundException;
+import com.trs.cc.sponsor.model.SponsorAPI;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static com.trs.cc.notification.constant.MessageConstants.TOKEN_NOT_FOUND;
+import static com.trs.cc.sponsor.constant.MessageConstants.TOKEN_NOT_FOUND;
 
 public class Utils {
 
@@ -49,16 +37,6 @@ public class Utils {
         }
     }
 
-    public static boolean validateEmailAddress(String emailAddress) {
-        boolean result = true;
-        try {
-            InternetAddress emailAddr = new InternetAddress(emailAddress);
-            emailAddr.validate();
-        } catch (AddressException ex) {
-            result = false;
-        }
-        return result;
-    }
 
     public static String generateUniqueId(int length) {
         String token_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvxyz";
@@ -81,9 +59,9 @@ public class Utils {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    public static List<NotificationAPI> getAllMethodNames(Class className) {
+    public static List<SponsorAPI> getAllMethodNames(Class className) {
         Method[] allMethods = className.getDeclaredMethods();
-        List<NotificationAPI> apis = new ArrayList<NotificationAPI>();
+        List<SponsorAPI> apis = new ArrayList<SponsorAPI>();
         for (Method method : allMethods) {
 
             if (Modifier.isPublic(method.getModifiers())) {
@@ -91,7 +69,7 @@ public class Utils {
                 RequestMapping rm = method.getAnnotation(RequestMapping.class);
                 ArrayList<Roles> authList = new ArrayList<Roles>(Arrays.asList(a.levels()));
 
-                NotificationAPI api = new NotificationAPI();
+                SponsorAPI api = new SponsorAPI();
                 api.setName(rm.name());
                 api.setRoles(authList);
                 apis.add(api);
@@ -101,26 +79,7 @@ public class Utils {
         return apis;
     }
 
-    /**
-     * This method is for file upload and Return Path in BitBucket.
-     *
-     * @param configurations
-     * @param imageName
-     * @param imageByteArray
-     * @return
-     */
-    public static String storeImageInAwsS3(NotificationAdminConfiguration configurations, final String imageName, final byte[] imageByteArray) {
-        AWSCredentials credentials = new BasicAWSCredentials(configurations.getFileUploadAccessKey(),
-                configurations.getFileUploadSecretKey());
-        AmazonS3 conn = new AmazonS3Client(credentials);
-        InputStream stream = new ByteArrayInputStream(imageByteArray);
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(imageByteArray.length);
-        metadata.setCacheControl("public, max-age=31536000");
-        conn.putObject(new PutObjectRequest(configurations.getBucketName(), imageName, stream, metadata)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-        return ((AmazonS3Client) conn).getResourceUrl(configurations.getBucketName(), imageName);
-    }
+
 
 
 

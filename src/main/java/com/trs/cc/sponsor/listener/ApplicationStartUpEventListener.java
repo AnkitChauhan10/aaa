@@ -1,12 +1,9 @@
 package com.trs.cc.sponsor.listener;
 
-import com.trs.cc.notification.controller.NotificationAdminConfigController;
-import com.trs.cc.notification.controller.NotificationController;
-import com.trs.cc.notification.model.NotificationAPI;
-import com.trs.cc.notification.model.NotificationAdminConfiguration;
-import com.trs.cc.notification.repository.NotificationAPIRepository;
-import com.trs.cc.notification.repository.NotificationAdminConfigRepository;
-import com.trs.cc.notification.utils.Utils;
+import com.trs.cc.sponsor.model.SponsorAPI;
+import com.trs.cc.sponsor.model.SponsorAdminConfiguration;
+import com.trs.cc.sponsor.repository.SponsorAPIRepository;
+import com.trs.cc.sponsor.repository.SponsorAdminConfigRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
 import java.util.List;
 
 @Component
@@ -30,11 +26,11 @@ public class ApplicationStartUpEventListener {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	NotificationAdminConfigRepository notificationAdminConfigRepository;
+	SponsorAdminConfigRepository sponsorAdminConfigRepository;
 
 
 	@Autowired
-	NotificationAPIRepository notificationAPIRepository;
+	SponsorAPIRepository sponsorAPIRepository;
 
 	@EventListener()
 	public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -42,37 +38,35 @@ public class ApplicationStartUpEventListener {
 		System.out.println(database);
 		// When application is run for the first time the minimal Auth Config needs to
 		// be created from here
-		List<NotificationAdminConfiguration> configs = notificationAdminConfigRepository.findAll();
+		List<SponsorAdminConfiguration> configs = sponsorAdminConfigRepository.findAll();
 		if (configs.size() > 0) {
 			logger.debug("Notification Module Technical configurations exists");
 		} else {
 
-			NotificationAdminConfiguration configuration = new NotificationAdminConfiguration();
+			SponsorAdminConfiguration configuration = new SponsorAdminConfiguration();
 			configuration.setDefaultPageSize(Integer.valueOf(pageLimit));
-			configuration.setUpdatedBy("SYSTEM");
-			configuration.setLastUpdated(Calendar.getInstance().getTime());
 
 
-			notificationAdminConfigRepository.insert(configuration);
+			sponsorAdminConfigRepository.insert(configuration);
 
 			logger.debug("Automatically Creted the Notification Module Technical configurations");
 		}
 
 		/* On Application Start up , create the list of authorized services for
 		 authorized data*/
-		List<NotificationAPI> notificationAPIS = Utils.getAllMethodNames(NotificationController.class);
-		List<NotificationAPI> configAPIs = Utils.getAllMethodNames(NotificationAdminConfigController.class);
-
-		saveIfNotExits(configAPIs);
-		saveIfNotExits(notificationAPIS);
+//		List<SponsorAPI> notificationAPIS = Utils.getAllMethodNames(NotificationController.class);
+//		List<SponsorAPI> configAPIs = Utils.getAllMethodNames(NotificationAdminConfigController.class);
+//
+//		saveIfNotExits(configAPIs);
+//		saveIfNotExits(notificationAPIS);
 	}
 
 
-	private void saveIfNotExits(List<NotificationAPI> apis){
+	private void saveIfNotExits(List<SponsorAPI> apis){
 		apis.forEach(api->{
-			if(!notificationAPIRepository.existsByName(api.getName())){
+			if(!sponsorAPIRepository.existsByName(api.getName())){
 				logger.info("Inserting API : {}",api.getName());
-				notificationAPIRepository.insert(api);
+				sponsorAPIRepository.insert(api);
 			}
 		});
 

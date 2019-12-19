@@ -1,14 +1,14 @@
 package com.trs.cc.sponsor.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trs.cc.notification.constant.MessageConstants;
-import com.trs.cc.notification.decorator.RequestSession;
-import com.trs.cc.notification.decorator.Response;
-import com.trs.cc.notification.model.JWTUser;
-import com.trs.cc.notification.services.NotificationAPIService;
-import com.trs.cc.notification.utils.CustomHTTPHeaders;
-import com.trs.cc.notification.utils.JwtTokenUtil;
-import com.trs.cc.notification.utils.Roles;
+import com.trs.cc.sponsor.constant.MessageConstants;
+import com.trs.cc.sponsor.decorator.RequestSession;
+import com.trs.cc.sponsor.decorator.Response;
+import com.trs.cc.sponsor.model.JWTUser;
+import com.trs.cc.sponsor.services.SponsorAPIService;
+import com.trs.cc.sponsor.utils.CustomHTTPHeaders;
+import com.trs.cc.sponsor.utils.JwtTokenUtil;
+import com.trs.cc.sponsor.utils.Roles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ import java.util.Collections;
 public class SponsorAuthorizationInterceptor extends HandlerInterceptorAdapter {
 
 	@Autowired
-    NotificationAPIService notificationAPIService;
+	SponsorAPIService sponsorAPIService;
 
 	@Autowired
 	JwtTokenUtil tokenUtil;
@@ -68,7 +68,7 @@ public class SponsorAuthorizationInterceptor extends HandlerInterceptorAdapter {
 		// If This is Resource Request then always return true
 
 		// IF ANONYMOUS Role then Pass the role
-		if(notificationAPIService.hasAccess(Collections.singletonList(Roles.ANONYMOUS.toString()),method.getMethod().getName())){
+		if(sponsorAPIService.hasAccess(Collections.singletonList(Roles.ANONYMOUS.toString()),method.getMethod().getName())){
 			return true;
 		}
 
@@ -85,7 +85,7 @@ public class SponsorAuthorizationInterceptor extends HandlerInterceptorAdapter {
 		JWTUser user;
 		try{
 			user = tokenUtil.getJwtUserFromToken(jwtToken);
-			if(!notificationAPIService.hasAccess(user.getRole(),method.getMethod().getName())){
+			if(!sponsorAPIService.hasAccess(user.getRole(),method.getMethod().getName())){
 				logger.error("Role is not allowed");
 				Response errorResponse = new Response(HttpStatus.FORBIDDEN,
 						MessageConstants.ROLE_IS_NOT_ALLOWED, MessageConstants.ROLE_IS_NOT_ALLOWED);

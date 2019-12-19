@@ -1,6 +1,6 @@
 package com.trs.cc.sponsor.utils;
 
-import com.trs.cc.notification.services.NotificationAdminConfigService;
+import com.trs.cc.sponsor.services.SponsorAdminConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ public class GeneralHelper {
 
 
     @Autowired
-    NotificationAdminConfigService adminConfigService;
+    SponsorAdminConfigService sponsorAdminConfigRepository;
 
 
     public PageRequest getPagination(Integer page, Integer size) {
@@ -19,8 +19,8 @@ public class GeneralHelper {
             page = 0;
         }
         if (size == null) {
-            size = adminConfigService.getNotificationConfig().getDefaultPageSize();
-            ;
+            size = sponsorAdminConfigRepository.getNotificationConfig().getDefaultPageSize();
+
         }
         return PageRequest.of(page, size);
     }

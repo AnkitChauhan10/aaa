@@ -1,6 +1,6 @@
 package com.trs.cc.sponsor.utils;
 
-import com.trs.cc.notification.model.JWTUser;
+import com.trs.cc.sponsor.model.JWTUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
