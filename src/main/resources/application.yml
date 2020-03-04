@@ -4,7 +4,7 @@ spring:
       authentication-database: admin
       username: community_admin
       password:  D5NYJq8M2W
-      database: cc_sponsor
+      database: cc_discouncode
       port: 27017
       host: 103.205.140.61
 
@@ -27,7 +27,7 @@ logging:
               MongoTemplate: DEBUG
 
 server:
-  port: 3007
+  port: 3012
 
 
 rmq:
