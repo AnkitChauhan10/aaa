@@ -25,7 +25,7 @@ public class PathTrailUpdateAspect {
 
 
     @Around("execution(* com.trs.cc.discountcode.repository.*.save(..))")
-    Object pathTrailArround(ProceedingJoinPoint joinPoint) throws Throwable{
+    Object pathTrailAround(ProceedingJoinPoint joinPoint) throws Throwable{
         logger.info("Session Id (IN Aspect) :"+requestSession.getR());
         if(joinPoint.getArgs().length ==  1 ){
             Object pathTrail = joinPoint.getArgs()[0];

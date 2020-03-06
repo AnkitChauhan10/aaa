@@ -3,12 +3,9 @@ package com.trs.cc.discountcode.decorator;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
-public class DiscountCodeResponse {
+public class UseDiscountCodeRequest {
+    String userId;
     String discountCode;
-    Date startDate;
-    Date expirationDate;
 }

@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("notification_config")
+@Document("discount_code_config")
 @Getter
 @Setter
 @AllArgsConstructor

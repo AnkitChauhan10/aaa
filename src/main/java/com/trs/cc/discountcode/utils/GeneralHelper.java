@@ -11,7 +11,7 @@ public class GeneralHelper {
 
 
     @Autowired
-    DiscountCodeAdminConfigService sponsorAdminConfigRepository;
+    DiscountCodeAdminConfigService discountCodeAdminConfigService;
 
 
     public PageRequest getPagination(Integer page, Integer size) {
@@ -19,7 +19,7 @@ public class GeneralHelper {
             page = 0;
         }
         if (size == null) {
-            size = sponsorAdminConfigRepository.getNotificationConfig().getDefaultPageSize();
+            size = discountCodeAdminConfigService.getNotificationConfig().getDefaultPageSize();
 
         }
         return PageRequest.of(page, size);

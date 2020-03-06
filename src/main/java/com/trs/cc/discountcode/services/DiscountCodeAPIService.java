@@ -22,7 +22,7 @@ public interface DiscountCodeAPIService {
 	 * @param api
 	 * @return
 	 */
-//	boolean hasAccess(List<String> roles, String api);
+	boolean hasAccess(List<String> roles, String api);
 	
 	
 }

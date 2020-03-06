@@ -13,5 +13,6 @@ import java.util.List;
  */
 @Repository
 public interface DiscountCodeAPIRepository extends MongoRepository<DiscountCodeAPI, String> {
-
+    List<DiscountCodeAPI> findByNameAndRolesIn(String name, List<String> roles);
+    boolean existsByName(String name);
 }

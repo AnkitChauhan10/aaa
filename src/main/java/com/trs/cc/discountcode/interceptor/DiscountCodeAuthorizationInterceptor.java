@@ -68,7 +68,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 		// If This is Resource Request then always return true
 
 		// IF ANONYMOUS Role then Pass the role
-		if(discountCodeAPIService.hasAccess(Collections.singletonList(Roles.ANONYMOUS.toString()),method.getMethod().getName())){
+		if(discountCodeAPIService.hasAccess(Collections.singletonList(Roles.ANONYMOUS.toString()), method.getMethod().getName())){
 			return true;
 		}
 
@@ -85,7 +85,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 		JWTUser user;
 		try{
 			user = tokenUtil.getJwtUserFromToken(jwtToken);
-			if(!discountCodeAPIService.hasAccess(user.getRole(),method.getMethod().getName())){
+			if(!discountCodeAPIService.hasAccess(user.getRole(), method.getMethod().getName())){
 				logger.error("Role is not allowed");
 				Response errorResponse = new Response(HttpStatus.FORBIDDEN,
 						MessageConstants.ROLE_IS_NOT_ALLOWED, MessageConstants.ROLE_IS_NOT_ALLOWED);

@@ -2,6 +2,7 @@ package com.trs.cc.discountcode.config;
 
 
 import com.google.common.collect.Lists;
+import com.trs.cc.discountcode.utils.CustomHTTPHeaders;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -40,7 +41,7 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("TOKEN", "Auth-Key", "header");
+        return new ApiKey(CustomHTTPHeaders.TOKEN.toString(), CustomHTTPHeaders.TOKEN.toString(), "header");
     }
 
     private SecurityContext securityContext() {
@@ -56,7 +57,7 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Lists.newArrayList(
-                new SecurityReference("TOKEN", authorizationScopes));
+                new SecurityReference(CustomHTTPHeaders.TOKEN.toString(), authorizationScopes));
     }
 
     private ApiInfo apiEndPointsInfo() {
