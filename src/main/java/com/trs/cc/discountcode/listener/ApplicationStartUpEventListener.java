@@ -1,9 +1,11 @@
 package com.trs.cc.discountcode.listener;
 
+import com.trs.cc.discountcode.controller.DiscountCodeController;
 import com.trs.cc.discountcode.model.DiscountCodeAPI;
 import com.trs.cc.discountcode.model.DiscountCodeAdminConfiguration;
 import com.trs.cc.discountcode.repository.DiscountCodeAPIRepository;
 import com.trs.cc.discountcode.repository.DiscountCodeAdminConfigRepository;
+import com.trs.cc.discountcode.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +56,11 @@ public class ApplicationStartUpEventListener {
 
 		/* On Application Start up , create the list of authorized services for
 		 authorized data*/
-//		List<DiscountCodeAPI> notificationAPIS = Utils.getAllMethodNames(NotificationController.class);
-//		List<DiscountCodeAPI> configAPIs = Utils.getAllMethodNames(NotificationAdminConfigController.class);
-//
+		List<DiscountCodeAPI> discountCodeAPIS = Utils.getAllMethodNames(DiscountCodeController.class);
+//		List<DiscountCodeAPI> configAPIs = Utils.getAllMethodNames(DiscountCodeAdminConfiguration.class);
+
 //		saveIfNotExits(configAPIs);
-//		saveIfNotExits(notificationAPIS);
+		saveIfNotExits(discountCodeAPIS);
 	}
 
 

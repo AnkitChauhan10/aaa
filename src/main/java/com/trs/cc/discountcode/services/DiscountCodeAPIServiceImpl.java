@@ -22,11 +22,11 @@ public class DiscountCodeAPIServiceImpl implements DiscountCodeAPIService {
 
 
 
-	@Override
+	/*@Override
 	public boolean hasAccess(List<String> roles, String api) {
 		List<DiscountCodeAPI> access = discountCodeAPIRepository.findByNameAndRolesIn(api, roles);
 		return !access.isEmpty();
-	}
+	}*/
 
 	
 	

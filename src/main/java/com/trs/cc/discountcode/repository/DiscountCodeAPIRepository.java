@@ -14,7 +14,4 @@ import java.util.List;
 @Repository
 public interface DiscountCodeAPIRepository extends MongoRepository<DiscountCodeAPI, String> {
 
-
-
-
 }
