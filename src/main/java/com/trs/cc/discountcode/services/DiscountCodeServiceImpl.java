@@ -1,20 +1,13 @@
 package com.trs.cc.discountcode.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trs.cc.discountcode.constant.ExceptionConstant;
 import com.trs.cc.discountcode.decorator.DiscountCodeRequest;
 import com.trs.cc.discountcode.decorator.DiscountCodeResponse;
-import com.trs.cc.discountcode.decorator.UseDiscountCodeRequest;
-import com.trs.cc.discountcode.decorator.UseDiscountCodeResponse;
-import com.trs.cc.discountcode.exception.AlreadyExistException;
-import com.trs.cc.discountcode.exception.AuthException;
-import com.trs.cc.discountcode.exception.CodeUsageLimitException;
-import com.trs.cc.discountcode.exception.NotFoundException;
+import com.trs.cc.discountcode.decorator.DiscountCodeUseRequest;
+import com.trs.cc.discountcode.decorator.DiscountCodeUseResponse;
+import com.trs.cc.discountcode.exception.*;
 import com.trs.cc.discountcode.model.DiscountCode;
 import com.trs.cc.discountcode.model.DiscountCodeLog;
-import com.trs.cc.discountcode.model.JWTUser;
-import com.trs.cc.discountcode.model.Module;
 import com.trs.cc.discountcode.repository.DiscountCodeLogRepository;
 import com.trs.cc.discountcode.repository.DiscountCodeRepository;
 import com.trs.cc.discountcode.utils.JwtTokenUtil;
@@ -27,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiscountCodeServiceImpl implements DiscountCodeService {
@@ -50,11 +46,6 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
         DiscountCode discountCode = modelMapper.map(discountCodeRequest, DiscountCode.class);
         discountCode = discountCodeRepository.save(discountCode);
-        try {
-            logger.info(new ObjectMapper().writeValueAsString(discountCode.getModules()));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
 
         return modelMapper.map(discountCode, DiscountCodeResponse.class);
     }
@@ -77,22 +68,44 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
-    public UseDiscountCodeResponse useDiscountCode(String module, UseDiscountCodeRequest useDiscountCodeRequest) throws NotFoundException, AuthException, CodeUsageLimitException {
-        String userId = useDiscountCodeRequest.getUserId();
-        String discountCode = useDiscountCodeRequest.getDiscountCode();
+    public void useDiscountCode(String module, DiscountCodeUseRequest discountCodeUseRequest) throws NotFoundException, AuthException, CodeUsageLimitException, TimeLimitExceedException {
+
+        String userId = discountCodeUseRequest.getUserId();
+        String discountCode = discountCodeUseRequest.getDiscountCode();
+
+        // find discount code data by code
         Optional<DiscountCode> optionalDiscountCode = discountCodeRepository.findByDiscountCodeAndSoftDeleteIsFalse(discountCode);
-        if (!optionalDiscountCode.isPresent()) throw new NotFoundException(ExceptionConstant.DISCOUNT_CODE_NOT_EXISTS);
+        if (!optionalDiscountCode.isPresent()) {
+            throw new NotFoundException(ExceptionConstant.DISCOUNT_CODE_NOT_EXISTS);
+        }
         DiscountCode discountCodeData = optionalDiscountCode.get();
+
+        // check expiration
+        Date todayDate = new Date();
+        Date expirationDate = discountCodeData.getExpirationDate();
+        if (todayDate.before(expirationDate)) {
+            throw new TimeLimitExceedException(ExceptionConstant.DISCOUNT_CODE_EXPIRES);
+        }
+
+        // check user access if any exists
+        List<String> users = discountCodeData.getUsers();
+        if (null != users && !users.contains(userId)) { // if users specification exists and user not exists
+            throw new AuthException(ExceptionConstant.USER_NOT_ALLOWED);
+        }
+
+        // check modules permission
         List<String> modules = discountCodeData.getModules();
-
-
         modules = modules == null ? new ArrayList<>() : modules;
-        if (!modules.contains(module)) throw new AuthException(ExceptionConstant.MODULE_HAVE_NOT_ACCESS);
+        if (!modules.contains(module)) {
+            throw new AuthException(ExceptionConstant.MODULE_HAVE_NOT_ACCESS);
+        }
 
+        // check usage and update usage
         int maxUse = discountCodeData.getNoOfMaxUsage();
         int used = discountCodeData.getUsageCount();
-        if (maxUse == used) throw new CodeUsageLimitException(ExceptionConstant.DISCOUNT_CODE_USAGE_LIMIT_EXCEEDS);
-
+        if (maxUse == used) {
+            throw new CodeUsageLimitException(ExceptionConstant.DISCOUNT_CODE_USAGE_LIMIT_EXCEEDS);
+        }
         used += 1;
 
         discountCodeData.setUsageCount(used);
@@ -100,14 +113,14 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
         DiscountCodeLog discountCodeLog = new DiscountCodeLog(null, discountCodeData.getId(), userId, module);
         discountCodeLogRepository.save(discountCodeLog);
-
-        return new UseDiscountCodeResponse(used);
     }
 
     @Override
     public DiscountCode findDiscountCodeById(String discountCodeId) throws NotFoundException {
         Optional<DiscountCode> discountCode = discountCodeRepository.findByIdAndSoftDeleteIsFalse(discountCodeId);
-        if (!discountCode.isPresent()) throw new NotFoundException(ExceptionConstant.DISCOUNT_CODE_NOT_EXISTS);
+        if (!discountCode.isPresent()) {
+            throw new NotFoundException(ExceptionConstant.DISCOUNT_CODE_NOT_EXISTS);
+        }
         return discountCode.get();
     }
 }

@@ -17,9 +17,8 @@ public class DiscountCodeRequest {
     float discountValue;
     float maxDiscountLowerLimit;
     int noOfMaxUsage;
-    int usageCount;
-    boolean reusable;
     Date startDate;
     Date expirationDate;
     List<String> modules;
+    List<String> users;
 }

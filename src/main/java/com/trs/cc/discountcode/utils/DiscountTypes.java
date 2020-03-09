@@ -11,7 +11,7 @@ public enum DiscountTypes {
 
     AMOUNT, PERCENTAGE, QUANTITY;
 
-    public List<DiscountTypes> getDiscountTypes() {
+    public static List<DiscountTypes> getDiscountTypes() {
         return Arrays.asList(DiscountTypes.values());
     }
 

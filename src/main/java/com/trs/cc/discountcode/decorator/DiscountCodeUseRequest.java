@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ModuleRequest {
-    String name;
+public class DiscountCodeUseRequest {
+    String userId;
+    String discountCode;
 }

@@ -24,12 +24,12 @@ public class DiscountCode extends PathTrail {
     DiscountTypes discountTypes;
     float discountValue;
     float maxDiscountLowerLimit;
-    boolean reusable;
     int noOfMaxUsage;
     int usageCount;
     Date startDate;
     Date expirationDate;
     List<String> modules;
+    List<String> users;
     @JsonIgnore
     boolean softDelete;
 }

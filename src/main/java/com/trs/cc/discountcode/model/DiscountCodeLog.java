@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("discount_code_log")
-public class DiscountCodeLog {
+public class DiscountCodeLog extends PathTrail{
     @Id
     String id;
 

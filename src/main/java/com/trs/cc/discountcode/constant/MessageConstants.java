@@ -22,6 +22,7 @@ public class MessageConstants {
     public static final String TOKEN_NOT_FOUND = "Token not token";
 
     public static final String DISCOUNT_CODE_DELETED_SUCCESSFULLY = "DISCOUNT CODE DELETED SUCCESSFULLY";
+    public static final String DISCOUNT_CODE_ACCEPTED_SUCCESSFULLY = "DISCOUNT CODE ACCEPTED SUCCESSFULLY";
 
 
 }

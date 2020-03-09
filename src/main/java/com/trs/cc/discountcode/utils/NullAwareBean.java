@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class NullAwareBean extends BeanUtilsBean {
     @Override
@@ -15,6 +16,9 @@ public class NullAwareBean extends BeanUtilsBean {
         }
         if (value instanceof Float) {
             if (value.equals(0.0f)) return;
+        }
+        if (value instanceof List) {
+            if (((List) value).isEmpty()) return;
         }
         super.copyProperty(dest, name, value);
     }

@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UseDiscountCodeResponse {
+public class DiscountCodeUseResponse {
     int usageCount;
 }

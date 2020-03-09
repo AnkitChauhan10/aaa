@@ -3,10 +3,7 @@ package com.trs.cc.discountcode.controller;
 import com.trs.cc.discountcode.constant.MessageConstants;
 import com.trs.cc.discountcode.constant.ResponseConstant;
 import com.trs.cc.discountcode.decorator.*;
-import com.trs.cc.discountcode.exception.AlreadyExistException;
-import com.trs.cc.discountcode.exception.AuthException;
-import com.trs.cc.discountcode.exception.CodeUsageLimitException;
-import com.trs.cc.discountcode.exception.NotFoundException;
+import com.trs.cc.discountcode.exception.*;
 import com.trs.cc.discountcode.services.DiscountCodeService;
 import com.trs.cc.discountcode.utils.Access;
 import com.trs.cc.discountcode.utils.Roles;
@@ -77,12 +74,13 @@ public class DiscountCodeController {
 
     @RequestMapping(name = "useDiscountCode", value = "/useDiscountCode", method = RequestMethod.POST)
     @Access(levels = {Roles.SYSTEM})
-    public DataResponse<UseDiscountCodeResponse> useDiscountCode(
-            @RequestBody UseDiscountCodeRequest useDiscountCodeRequest
+    public DataResponse<String> useDiscountCode(
+            @RequestBody DiscountCodeUseRequest discountCodeUseRequest
     ) {
-        DataResponse<UseDiscountCodeResponse> dataResponse = new DataResponse<>();
+        DataResponse<String> dataResponse = new DataResponse<>();
         try {
-            dataResponse.setData(discountCodeService.useDiscountCode(requestSession.getJwtUser().getId(), useDiscountCodeRequest));
+            discountCodeService.useDiscountCode(requestSession.getJwtUser().getId(), discountCodeUseRequest);
+            dataResponse.setData(MessageConstants.DISCOUNT_CODE_ACCEPTED_SUCCESSFULLY);
             dataResponse.setStatus(ResponseConstant.OK_RESPONSE);
         } catch (NotFoundException e) {
             dataResponse.setStatus(new Response(HttpStatus.NOT_FOUND, ResponseConstant.FAIL, e.getLocalizedMessage()));
@@ -90,6 +88,8 @@ public class DiscountCodeController {
             dataResponse.setStatus(new Response(HttpStatus.FORBIDDEN, ResponseConstant.FAIL, e.getLocalizedMessage()));
         } catch (CodeUsageLimitException e) {
             dataResponse.setStatus(new Response(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS, ResponseConstant.FAIL, e.getLocalizedMessage()));
+        } catch (TimeLimitExceedException e) {
+            dataResponse.setStatus(new Response(HttpStatus.BAD_REQUEST, ResponseConstant.FAIL, e.getMessage()));
         }
         return dataResponse;
     }
