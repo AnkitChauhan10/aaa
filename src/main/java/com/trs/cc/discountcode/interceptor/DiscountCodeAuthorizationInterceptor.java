@@ -106,6 +106,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 
 		}
 		String localeLanguage = request.getHeader("Accept-Language");
+
 		if (!StringUtils.isEmpty(localeLanguage)) {
 			requestSession.setLocale(Locale.forLanguageTag(localeLanguage));
 		}

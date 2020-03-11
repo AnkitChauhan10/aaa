@@ -26,6 +26,7 @@ public class ResponseToLocaleAspect {
     @Autowired
     RequestSession requestSession;
 
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Around("execution(* com.trs.cc.discountcode.services.ResponseManager.getResponse(..))")
@@ -46,6 +47,8 @@ public class ResponseToLocaleAspect {
             for (Annotation annotation : annotations) {
                 // change description if description annotation found
                 if (annotation instanceof DescriptionParameter) {
+                    logger.info("Message -> {}",argument);
+                    logger.info("Locale -> {}",requestSession.getLocale());
                     arguments[index] = messageSource.getMessage(argument.toString(), null, requestSession.getLocale());
                 }
             }
