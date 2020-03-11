@@ -27,6 +27,8 @@ public class DiscountCodeController {
     DiscountCodeService discountCodeService;
     @Autowired
     RequestSession requestSession;
+    @Autowired
+    Response response;
 
     @RequestMapping(name = "addDiscountCode", value = "/addDiscountCode", method = RequestMethod.POST)
     @Access(levels = {Roles.SYSTEM})
@@ -36,7 +38,7 @@ public class DiscountCodeController {
         DataResponse<DiscountCodeResponse> dataResponse = new DataResponse<>();
         try {
             dataResponse.setData(discountCodeService.addDiscountCode(discountCodeRequest));
-            dataResponse.setStatus(new Response().getSuccessResponse());
+            dataResponse.setStatus(Response.getSuccessResponse());
         } catch (AlreadyExistException e) {
             dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.CONFLICT));
         }
@@ -102,7 +104,7 @@ public class DiscountCodeController {
     @RequestMapping(name = "getDiscountCodeList", value = "/getDiscountCodeList", method = RequestMethod.GET)
     @Access(levels = {Roles.SYSTEM})
     public DataResponse getDiscountCodeList() {
-        return new DataResponse<>(discountCodeService.getDiscountCodeList(), new Response().getSuccessResponse());
+        return new DataResponse<>(discountCodeService.getDiscountCodeList(), response.getResponse(HttpStatus.OK, ResponseConstant.OK, ResponseConstant.OK_DESCRIPTION));
     }
 
 }

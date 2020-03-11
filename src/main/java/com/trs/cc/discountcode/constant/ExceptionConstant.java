@@ -1,7 +1,5 @@
 package com.trs.cc.discountcode.constant;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class ExceptionConstant {
     public static final String DISCOUNT_CODE_ALREADY_EXISTS = "DISCOUNT CODE ALREADY EXISTS";
     public static final String DISCOUNT_CODE_NAME_ALREADY_EXISTS = "DISCOUNT CODE NAME ALREADY EXISTS";

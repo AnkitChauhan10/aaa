@@ -1,17 +1,14 @@
 package com.trs.cc.discountcode.constant;
 
-import com.trs.cc.discountcode.decorator.Response;
-import org.springframework.http.HttpStatus;
-
 public class ResponseConstant {
     //Response description
-    public static final String DELETED_DESCRIPTION = "Deleted Successfully";
-    public static final String CREATED_DESCRIPTION = "Created Successfully";
-    public static final String UPDATE_DESCRIPTION = "Updated Successfully";
-    public static final String INVALID_REQUEST_DESCRIPTION = "Invalid Request";
-    public static final String INVALID_DATA_DESCRIPTION = "Invalid Data";
-    public static final String NOT_FOUND_DESCRIPTION = "No Record Found";
-    public static final String OK_DESCRIPTION = "Success";
+    public static final String DELETED_DESCRIPTION = "DELETED_DESCRIPTION";
+    public static final String CREATED_DESCRIPTION = "CREATED_DESCRIPTION";
+    public static final String UPDATE_DESCRIPTION = "UPDATE_DESCRIPTION";
+    public static final String INVALID_REQUEST_DESCRIPTION = "INVALID_REQUEST_DESCRIPTION";
+    public static final String INVALID_DATA_DESCRIPTION = "INVALID_DATA_DESCRIPTION";
+    public static final String NOT_FOUND_DESCRIPTION = "NOT_FOUND_DESCRIPTION";
+    public static final String OK_DESCRIPTION = "OK_DESCRIPTION";
 
     //Response status
     public static final String DELETED = "DELETED";
@@ -21,8 +18,4 @@ public class ResponseConstant {
     public static final String ERROR = "ERROR";
     public static final String FAIL = "Fail";
     public static final String OK = "OK";
-
-    public static final Response OK_RESPONSE = new Response(HttpStatus.OK, OK, OK_DESCRIPTION);
-    public static final Response UPDATE_RESPONSE = new Response(HttpStatus.OK, UPDATED, UPDATE_DESCRIPTION);
-    public static final Response DELETE_RESPONSE = new Response(HttpStatus.OK, DELETED, DELETED_DESCRIPTION);
 }

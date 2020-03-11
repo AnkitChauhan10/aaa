@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Locale;
 
 /**
  * login intercepter DO NOT CHANGE any implementation here, if needed extend the
@@ -102,6 +104,10 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 			sendJSONResponse(errorResponse, response, HttpServletResponse.SC_UNAUTHORIZED);
 			return false;
 
+		}
+		String localeLanguage = request.getHeader("Accept-Language");
+		if (!StringUtils.isEmpty(localeLanguage)) {
+			requestSession.setLocale(Locale.forLanguageTag(localeLanguage));
 		}
 		requestSession.setJwtUser(user);
 		return true;

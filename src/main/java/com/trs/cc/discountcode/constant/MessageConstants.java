@@ -14,12 +14,12 @@ public class MessageConstants {
     private MessageConstants() {
     }
 
-    public static final String AUTHORIZATION_IS_NOT_PRESENT_IN_REQUEST = "Authentication is not present in the request";
-    public static final String AUTHORIZATION_IS_NOT_VALID = "Authorization is not valid";
-    public static final String ROLE_IS_NOT_ALLOWED = "Role is not allowed";
-    public static final String INVALID_TOKEN_SIGNATURE = "Invalid token signature";
-    public static final String INVALID_TOKEN = "Invalid token";
-    public static final String TOKEN_NOT_FOUND = "Token not token";
+    public static final String AUTHORIZATION_IS_NOT_PRESENT_IN_REQUEST = "AUTHORIZATION_IS_NOT_PRESENT_IN_REQUEST";
+    public static final String AUTHORIZATION_IS_NOT_VALID = "AUTHORIZATION_IS_NOT_VALID";
+    public static final String ROLE_IS_NOT_ALLOWED = "ROLE_IS_NOT_ALLOWED";
+    public static final String INVALID_TOKEN_SIGNATURE = "INVALID_TOKEN_SIGNATURE";
+    public static final String INVALID_TOKEN = "INVALID_TOKEN";
+    public static final String TOKEN_NOT_FOUND = "TOKEN_NOT_FOUND";
 
     public static final String DISCOUNT_CODE_DELETED_SUCCESSFULLY = "DISCOUNT CODE DELETED SUCCESSFULLY";
     public static final String DISCOUNT_CODE_ACCEPTED_SUCCESSFULLY = "DISCOUNT CODE ACCEPTED SUCCESSFULLY";

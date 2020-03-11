@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Locale;
 import java.util.Random;
 
 @Getter
@@ -22,4 +23,6 @@ public class RequestSession {
     public RequestSession() {
         r = new Random().nextInt();
     }
+
+    Locale locale;
 }
