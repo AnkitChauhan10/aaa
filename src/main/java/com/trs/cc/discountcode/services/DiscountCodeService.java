@@ -8,6 +8,7 @@ import com.trs.cc.discountcode.exception.*;
 import com.trs.cc.discountcode.model.DiscountCode;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public interface DiscountCodeService {
     DiscountCodeResponse addDiscountCode(DiscountCodeRequest discountCodeRequest) throws AlreadyExistException;
@@ -17,6 +18,8 @@ public interface DiscountCodeService {
     void deleteDiscountCode(String discountCodeId) throws NotFoundException;
 
     void useDiscountCode(String systemToken, DiscountCodeUseRequest discountCodeUseRequest) throws NotFoundException, AuthException, CodeUsageLimitException, TimeLimitExceedException;
+
+    List<DiscountCode> getDiscountCodeList();
 
     DiscountCode findDiscountCodeById(String discountCodeId) throws NotFoundException;
 }

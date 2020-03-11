@@ -1,9 +1,8 @@
 package com.trs.cc.discountcode.decorator;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
-import lombok.AllArgsConstructor;
+import com.trs.cc.discountcode.services.ResponseManager;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
@@ -12,20 +11,24 @@ import static com.trs.cc.discountcode.constant.ResponseConstant.*;
 @JsonRootName ( value = "status")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Response {
-	
+public class Response{
+
 	HttpStatus code;
 	String status;
 	String description;
+
+	public Response(HttpStatus code, String status, String description) {
+		this.code = code;
+		this.status = status;
+		this.description = description;
+	}
 
 	public static Response getOkResponse(){
 		return new Response(HttpStatus.OK, OK, OK_DESCRIPTION);
 	}
 
 	public static Response getSuccessResponse() {
-		return new Response(HttpStatus.OK, SUCCESS, OK_DESCRIPTION);
+		return ResponseManager.getResponse(HttpStatus.OK, SUCCESS, OK_DESCRIPTION);
 	}
 
 	public static Response getCreatedResponse(){
@@ -52,9 +55,14 @@ public class Response {
 		return new Response(HttpStatus.BAD_REQUEST, ERROR, NOT_FOUND_DESCRIPTION);
 	}
 
+	public static Response getNotFoundResponse(String message){
+		return new Response(HttpStatus.BAD_REQUEST, ERROR, message);
+	}
+
 	public static Response getErrorResponse(String message, HttpStatus statusCode) {
 		return new Response(statusCode, ERROR, message);
 	}
+
 	public static Response getSuccessResponse(String message, HttpStatus statusCode) {
 		return new Response(statusCode, SUCCESS, message);
 	}

@@ -5,14 +5,19 @@ import com.trs.cc.discountcode.constant.ResponseConstant;
 import com.trs.cc.discountcode.decorator.*;
 import com.trs.cc.discountcode.exception.*;
 import com.trs.cc.discountcode.services.DiscountCodeService;
+import com.trs.cc.discountcode.services.ResponseManager;
 import com.trs.cc.discountcode.utils.Access;
 import com.trs.cc.discountcode.utils.Roles;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @RestController
 @RequestMapping("discount-code-controller")
@@ -31,9 +36,9 @@ public class DiscountCodeController {
         DataResponse<DiscountCodeResponse> dataResponse = new DataResponse<>();
         try {
             dataResponse.setData(discountCodeService.addDiscountCode(discountCodeRequest));
-            dataResponse.setStatus(ResponseConstant.OK_RESPONSE);
+            dataResponse.setStatus(new Response().getSuccessResponse());
         } catch (AlreadyExistException e) {
-            dataResponse.setStatus(new Response(HttpStatus.CONFLICT, ResponseConstant.FAIL, e.getLocalizedMessage()));
+            dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.CONFLICT));
         }
         return dataResponse;
     }
@@ -47,11 +52,11 @@ public class DiscountCodeController {
         DataResponse<DiscountCodeResponse> dataResponse = new DataResponse<>();
         try {
             dataResponse.setData(discountCodeService.updateDiscountCode(discountCodeId, updateDiscountCodeRequest));
-            dataResponse.setStatus(ResponseConstant.UPDATE_RESPONSE);
+            dataResponse.setStatus(Response.getUpdatedResponse());
         } catch (NotFoundException e) {
-            dataResponse.setStatus(new Response(HttpStatus.NOT_FOUND, ResponseConstant.FAIL, e.getLocalizedMessage()));
+            dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND));
         } catch (InvocationTargetException | IllegalAccessException e) {
-            dataResponse.setStatus(new Response(HttpStatus.INTERNAL_SERVER_ERROR, ResponseConstant.FAIL, e.getLocalizedMessage()));
+            dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
         return dataResponse;
     }
@@ -65,9 +70,9 @@ public class DiscountCodeController {
         try {
             discountCodeService.deleteDiscountCode(discountCodeId);
             dataResponse.setData(MessageConstants.DISCOUNT_CODE_DELETED_SUCCESSFULLY);
-            dataResponse.setStatus(ResponseConstant.DELETE_RESPONSE);
+            dataResponse.setStatus(Response.getDeletedResponse());
         } catch (NotFoundException e) {
-            dataResponse.setStatus(new Response(HttpStatus.NOT_FOUND, ResponseConstant.FAIL, e.getLocalizedMessage()));
+            dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND));
         }
         return dataResponse;
     }
@@ -81,17 +86,23 @@ public class DiscountCodeController {
         try {
             discountCodeService.useDiscountCode(requestSession.getJwtUser().getId(), discountCodeUseRequest);
             dataResponse.setData(MessageConstants.DISCOUNT_CODE_ACCEPTED_SUCCESSFULLY);
-            dataResponse.setStatus(ResponseConstant.OK_RESPONSE);
+            dataResponse.setStatus(Response.getOkResponse());
         } catch (NotFoundException e) {
-            dataResponse.setStatus(new Response(HttpStatus.NOT_FOUND, ResponseConstant.FAIL, e.getLocalizedMessage()));
+            dataResponse.setStatus(Response.getNotFoundResponse(e.getMessage()));
         } catch (AuthException e) {
-            dataResponse.setStatus(new Response(HttpStatus.FORBIDDEN, ResponseConstant.FAIL, e.getLocalizedMessage()));
+            dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.FORBIDDEN));
         } catch (CodeUsageLimitException e) {
-            dataResponse.setStatus(new Response(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS, ResponseConstant.FAIL, e.getLocalizedMessage()));
+            dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS));
         } catch (TimeLimitExceedException e) {
-            dataResponse.setStatus(new Response(HttpStatus.BAD_REQUEST, ResponseConstant.FAIL, e.getMessage()));
+            dataResponse.setStatus(Response.getErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST));
         }
         return dataResponse;
+    }
+
+    @RequestMapping(name = "getDiscountCodeList", value = "/getDiscountCodeList", method = RequestMethod.GET)
+    @Access(levels = {Roles.SYSTEM})
+    public DataResponse getDiscountCodeList() {
+        return new DataResponse<>(discountCodeService.getDiscountCodeList(), new Response().getSuccessResponse());
     }
 
 }

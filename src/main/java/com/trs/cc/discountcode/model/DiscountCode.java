@@ -21,7 +21,7 @@ public class DiscountCode extends PathTrail {
     String discountCode;
     String name;
     String description;
-    DiscountTypes discountTypes;
+    DiscountTypes discountType;
     float discountValue;
     float maxDiscountLowerLimit;
     int noOfMaxUsage;

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 /**
  * Configure Interceptors on application startup. each interceptor is added in the order of first come first served.
@@ -31,7 +32,8 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(discountCodeAuthorizationInterceptor).excludePathPatterns(
+		registry.addInterceptor(discountCodeAuthorizationInterceptor)
+				.excludePathPatterns(
 				"/swagger-ui.html",
 				"/webjars/**",
 				"/swagger-resources",
@@ -43,7 +45,6 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
 		logger.info("Adding Login authentication interceptor");
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}
-
 
 	/**
 	 * Add Cross origin mapping at global Scale

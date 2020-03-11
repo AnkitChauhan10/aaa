@@ -81,6 +81,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
         DiscountCode discountCodeData = optionalDiscountCode.get();
 
         // check expiration
+
         Date todayDate = new Date();
         Date expirationDate = discountCodeData.getExpirationDate();
         if (todayDate.before(expirationDate)) {
@@ -113,6 +114,11 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
         DiscountCodeLog discountCodeLog = new DiscountCodeLog(null, discountCodeData.getId(), userId, module);
         discountCodeLogRepository.save(discountCodeLog);
+    }
+
+    @Override
+    public List<DiscountCode> getDiscountCodeList() {
+        return discountCodeRepository.findAllBySoftDeleteIsFalse();
     }
 
     @Override

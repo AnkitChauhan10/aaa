@@ -3,9 +3,12 @@ package com.trs.cc.discountcode.aspects;
 
 import com.trs.cc.discountcode.decorator.RequestSession;
 import com.trs.cc.discountcode.model.PathTrail;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,6 @@ public class PathTrailUpdateAspect {
 
     @Autowired
     RequestSession requestSession;
-
-
-
 
     @Around("execution(* com.trs.cc.discountcode.repository.*.save(..))")
     Object pathTrailAround(ProceedingJoinPoint joinPoint) throws Throwable{
@@ -46,8 +46,5 @@ public class PathTrailUpdateAspect {
         }else{
             return joinPoint.proceed(joinPoint.getArgs());
         }
-
     }
-
-
 }
