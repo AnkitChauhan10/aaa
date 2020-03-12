@@ -5,7 +5,6 @@ import com.trs.cc.discountcode.utils.DescriptionParameter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.FieldSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 @Aspect
@@ -25,7 +23,6 @@ public class ResponseToLocaleAspect {
     MessageSource messageSource;
     @Autowired
     RequestSession requestSession;
-
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

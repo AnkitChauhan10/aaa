@@ -37,10 +37,10 @@ public class ApplicationStartUpEventListener {
     @EventListener()
     public void onApplicationEvent(ContextRefreshedEvent event) {
         logger.debug("Landed in here " + database);
-        System.out.println(database);
+        logger.info(database);
         // When application is run for the first time the minimal Auth Config needs to
         // be created from here
-        List<DiscountCodeAdminConfiguration> configs = discountCodeAdminConfigRepository.findAll();
+        /*List<DiscountCodeAdminConfiguration> configs = discountCodeAdminConfigRepository.findAll();
         if (configs.size() > 0) {
             logger.debug("Notification Module Technical configurations exists");
         } else {
@@ -52,10 +52,11 @@ public class ApplicationStartUpEventListener {
             discountCodeAdminConfigRepository.insert(configuration);
 
             logger.debug("Automatically Creted the Notification Module Technical configurations");
-        }
+        }*/
 
 		/* On Application Start up , create the list of authorized services for
 		 authorized data*/
+		discountCodeAPIRepository.deleteAll();
         List<DiscountCodeAPI> discountCodeAPIS = Utils.getAllMethodNames(DiscountCodeController.class);
         saveIfNotExits(discountCodeAPIS);
 

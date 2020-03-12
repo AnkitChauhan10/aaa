@@ -4,7 +4,6 @@ import com.trs.cc.discountcode.constant.ExceptionConstant;
 import com.trs.cc.discountcode.decorator.DiscountCodeRequest;
 import com.trs.cc.discountcode.decorator.DiscountCodeResponse;
 import com.trs.cc.discountcode.decorator.DiscountCodeUseRequest;
-import com.trs.cc.discountcode.decorator.DiscountCodeUseResponse;
 import com.trs.cc.discountcode.exception.*;
 import com.trs.cc.discountcode.model.DiscountCode;
 import com.trs.cc.discountcode.model.DiscountCodeLog;
