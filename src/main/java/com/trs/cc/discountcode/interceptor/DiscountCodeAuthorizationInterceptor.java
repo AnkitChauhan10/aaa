@@ -6,6 +6,7 @@ import com.trs.cc.discountcode.decorator.RequestSession;
 import com.trs.cc.discountcode.decorator.Response;
 import com.trs.cc.discountcode.model.JWTUser;
 import com.trs.cc.discountcode.services.DiscountCodeAPIService;
+import com.trs.cc.discountcode.services.ResponseManager;
 import com.trs.cc.discountcode.utils.CustomHTTPHeaders;
 import com.trs.cc.discountcode.utils.JwtTokenUtil;
 import com.trs.cc.discountcode.utils.Roles;
@@ -48,6 +49,9 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 	@Autowired
 	RequestSession requestSession;
 
+	@Autowired
+	ResponseManager responseManager;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
@@ -64,6 +68,14 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 		}
 
 
+		String localeLanguage = request.getHeader("Accept-Language");
+
+		if (!StringUtils.isEmpty(localeLanguage)) {
+			requestSession.setLocale(Locale.forLanguageTag(localeLanguage));
+		}
+
+
+
 		HandlerMethod method = (HandlerMethod) handler;
 		RequestMapping rm = method.getMethodAnnotation(RequestMapping.class);
 		logger.info("Session Id (In Interceptor) :"+requestSession.getR());
@@ -77,7 +89,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 		String jwtToken = request.getHeader(CustomHTTPHeaders.TOKEN.toString());
 		if(jwtToken == null){
 			logger.error("Authentication not present in the request");
-			Response errorResponse = new Response(HttpStatus.UNAUTHORIZED,
+			Response errorResponse = responseManager.getResponse(HttpStatus.UNAUTHORIZED,
 					MessageConstants.AUTHORIZATION_IS_NOT_PRESENT_IN_REQUEST,
 					MessageConstants.AUTHORIZATION_IS_NOT_PRESENT_IN_REQUEST);
 			// Token is required if api is not ANONYMOUS
@@ -89,7 +101,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 			user = tokenUtil.getJwtUserFromToken(jwtToken);
 			if(!discountCodeAPIService.hasAccess(user.getRole(), method.getMethod().getName())){
 				logger.error("Role is not allowed");
-				Response errorResponse = new Response(HttpStatus.FORBIDDEN,
+				Response errorResponse = responseManager.getResponse(HttpStatus.FORBIDDEN,
 						MessageConstants.ROLE_IS_NOT_ALLOWED, MessageConstants.ROLE_IS_NOT_ALLOWED);
 				// if Role is not allowed
 				sendJSONResponse(errorResponse, response, HttpServletResponse.SC_FORBIDDEN);
@@ -98,18 +110,14 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 
 		}catch (Exception e){
 			logger.error("Invalid Token Signature!! ");
-			Response errorResponse = new Response(HttpStatus.UNAUTHORIZED,
+			Response errorResponse = responseManager.getResponse(HttpStatus.UNAUTHORIZED,
 					MessageConstants.INVALID_TOKEN_SIGNATURE, MessageConstants.INVALID_TOKEN_SIGNATURE);
 			// if Token is invalid or signature is invalid
 			sendJSONResponse(errorResponse, response, HttpServletResponse.SC_UNAUTHORIZED);
 			return false;
 
 		}
-		String localeLanguage = request.getHeader("Accept-Language");
 
-		if (!StringUtils.isEmpty(localeLanguage)) {
-			requestSession.setLocale(Locale.forLanguageTag(localeLanguage));
-		}
 		requestSession.setJwtUser(user);
 		return true;
 
