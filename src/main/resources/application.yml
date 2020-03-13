@@ -2,17 +2,17 @@ spring:
   data:
     mongodb:
       authentication-database: admin
-      #username: community_admin
-      #password:  D5NYJq8M2W
+      username: community_admin
+      password:  D5NYJq8M2W
       database: cc_discountcode
-      #port: 27017
-      #host: 103.205.140.61
-  #messages:
-    #basename: messages
-    #always-use-message-format: false
-    #encoding: UTF-8
-    #fallback-to-system-locale: true
-    #use-code-as-default-message: false
+      port: 27017
+      host: 103.205.140.61
+  messages:
+    basename: messages
+    always-use-message-format: false
+    encoding: UTF-8
+    fallback-to-system-locale: true
+    use-code-as-default-message: false
 
 trs:
   defaults:
