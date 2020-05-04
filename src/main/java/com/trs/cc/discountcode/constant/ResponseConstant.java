@@ -16,6 +16,7 @@ public class ResponseConstant {
     public static final String VERIFY = "VERIFY";
     public static final String UPDATED = "UPDATED";
     public static final String ERROR = "ERROR";
+    public static final String CONTINUE = "CONTINUE";
     public static final String FAIL = "FAIL";
     public static final String OK = "OK";
 }

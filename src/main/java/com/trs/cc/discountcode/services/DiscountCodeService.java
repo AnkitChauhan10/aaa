@@ -17,9 +17,11 @@ public interface DiscountCodeService {
 
     void deleteDiscountCode(String discountCodeId) throws NotFoundException;
 
-    void useDiscountCode(String systemToken, DiscountCodeUseRequest discountCodeUseRequest) throws NotFoundException, AuthException, CodeUsageLimitException, TimeLimitExceedException;
+    DiscountCode useDiscountCode(String systemToken, DiscountCodeUseRequest discountCodeUseRequest) throws NotFoundException, AuthException, CodeUsageLimitException, TimeLimitExceedException;
 
     List<DiscountCode> getDiscountCodeList();
 
     DiscountCode findDiscountCodeById(String discountCodeId) throws NotFoundException;
+
+    DiscountCode save(DiscountCode discountCode);
 }

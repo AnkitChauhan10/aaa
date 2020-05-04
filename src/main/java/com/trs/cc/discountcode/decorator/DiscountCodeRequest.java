@@ -14,9 +14,9 @@ public class DiscountCodeRequest {
     String name;
     String description;
     DiscountTypes discountType;
-    float discountValue;
-    float maxDiscountLowerLimit;
-    int noOfMaxUsage;
+    Float discountValue;
+    Float maxDiscountLowerLimit;
+    Integer noOfMaxUsage;
     Date startDate;
     Date expirationDate;
     List<String> modules;
