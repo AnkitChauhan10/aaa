@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DiscountCodeServiceImpl implements DiscountCodeService {
@@ -55,7 +54,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Override
     public DiscountCodeResponse updateDiscountCode(String discountCodeId, DiscountCodeRequest discountCodeRequest) throws NotFoundException, InvocationTargetException, IllegalAccessException {
-        DiscountCode discountCode = findDiscountCodeById(discountCodeId);
+        DiscountCode discountCode = getDiscountCode(discountCodeId);
 
         copyNotNullProps.copyProperties(discountCode, discountCodeRequest);
         discountCode = discountCodeRepository.save(discountCode);
@@ -65,7 +64,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
     @Override
     public void deleteDiscountCode(String discountCodeId) throws NotFoundException {
-        DiscountCode discountCode = findDiscountCodeById(discountCodeId);
+        DiscountCode discountCode = getDiscountCode(discountCodeId);
         discountCode.setSoftDelete(true);
         discountCodeRepository.save(discountCode);
     }
@@ -94,7 +93,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
         // check user access if any exists
         List<String> users = discountCodeData.getUsers();
-        if (users != null && !users.contains(userId)) { // if users specification exists and user not exists
+        if (users != null && !users.isEmpty() && !users.contains(userId)) { // if users specification exists and user not exists
             throw new AuthException(ExceptionConstant.USER_NOT_ALLOWED);
         }
 
@@ -106,10 +105,10 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
         }
 
         // check usage and update usage
-        int maxUse = discountCodeData.getNoOfMaxUsage();
-        int used = discountCodeData.getUsageCount();
+        int maxUse = discountCodeData.getMaxUsage();
+        int used = discountCodeData.getCurrentUsage();
         if(maxUse>0) {
-            if (maxUse == used) {
+            if (maxUse <= used) {
                 throw new CodeUsageLimitException(ExceptionConstant.DISCOUNT_CODE_USAGE_LIMIT_EXCEEDS);
             }
         }
@@ -125,7 +124,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
-    public DiscountCode findDiscountCodeById(String discountCodeId) throws NotFoundException {
+    public DiscountCode getDiscountCode(String discountCodeId) throws NotFoundException {
         return discountCodeRepository.findByIdAndSoftDeleteIsFalse(discountCodeId).orElseThrow(()->new NotFoundException(ExceptionConstant.DISCOUNT_CODE_NOT_EXISTS));
     }
 

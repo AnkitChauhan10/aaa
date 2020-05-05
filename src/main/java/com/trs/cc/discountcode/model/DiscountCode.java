@@ -20,14 +20,14 @@ public class DiscountCode extends PathTrail {
     @Id
     String id;
 
-    String discountCode;
     String name;
+    String discountCode;
     String description;
     DiscountTypes discountType;
     float discountValue;
-    float maxDiscountLowerLimit;
-    int noOfMaxUsage;
-    int usageCount;
+    float maxDiscount;
+    int maxUsage;
+    int currentUsage;
     Date startDate;
     Date expirationDate;
     List<String> modules;

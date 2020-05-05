@@ -1,18 +1,32 @@
 package com.trs.cc.discountcode.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 public enum DiscountTypes {
 
-    AMOUNT, PERCENTAGE, QUANTITY;
+    PERCENT("Percent"),
+    AMOUNT("Amount"),
+    TICKET("Ticket");  //(Free ticket in discount rule))
 
-    public static List<DiscountTypes> getDiscountTypes() {
-        return Arrays.asList(DiscountTypes.values());
+    String name;
+
+    DiscountTypes(String name){
+        this.name = name;
+    }
+
+    public static List<Map<String,String>> toList(){
+        return Arrays.stream(values()).map(DiscountTypes::toMap).collect(Collectors.toList());
+    }
+
+    Map<String,String> toMap(){
+        Map<String,String> map = new HashMap<>();
+        map.put("name",name);
+        map.put("value",this.toString());
+        return map;
     }
 
 }

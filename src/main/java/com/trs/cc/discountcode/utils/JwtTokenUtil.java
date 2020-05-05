@@ -4,6 +4,7 @@ import com.trs.cc.discountcode.model.JWTUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,7 @@ public class JwtTokenUtil implements Serializable {
     }
     //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(encodeBase64(secret)).parseClaimsJws(token).getBody();
     }
 
 
@@ -71,11 +72,18 @@ public class JwtTokenUtil implements Serializable {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(SignatureAlgorithm.HS512, encodeBase64(secret)).compact();
     }
     //validate token
     public Boolean validateToken(String token, JWTUser userDetails) {
         final String userId = getUserIdFromToken(token);
         return (userId.equals(userDetails.getId()) && !isTokenExpired(token));
+    }
+
+    private static String encodeBase64(String password) {
+        byte[] pass = Base64.encodeBase64(password.getBytes());
+        String actualString = new String(pass);
+        System.out.println(actualString);
+        return actualString;
     }
 }

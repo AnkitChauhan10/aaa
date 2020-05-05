@@ -31,6 +31,9 @@ public class JWTUser {
         return claim;
     }
 
+    public boolean hasRole(String role){
+        return this.role.contains(role);
+    }
 
     public static JWTUser fromClaim(Claims claim){
         JWTUser jwtUser = new JWTUser();

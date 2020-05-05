@@ -21,7 +21,7 @@ public interface DiscountCodeService {
 
     List<DiscountCode> getDiscountCodeList();
 
-    DiscountCode findDiscountCodeById(String discountCodeId) throws NotFoundException;
+    DiscountCode getDiscountCode(String discountCodeId) throws NotFoundException;
 
     DiscountCode save(DiscountCode discountCode);
 }

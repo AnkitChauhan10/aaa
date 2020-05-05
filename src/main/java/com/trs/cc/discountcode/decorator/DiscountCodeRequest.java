@@ -10,13 +10,13 @@ import java.util.List;
 @Getter
 @Setter
 public class DiscountCodeRequest {
-    String discountCode;
     String name;
+    String discountCode;
     String description;
     DiscountTypes discountType;
     Float discountValue;
-    Float maxDiscountLowerLimit;
-    Integer noOfMaxUsage;
+    Float maxDiscount;
+    Integer maxUsage;
     Date startDate;
     Date expirationDate;
     List<String> modules;
