@@ -56,7 +56,6 @@ public class ApplicationStartUpEventListener {
 
 		/* On Application Start up , create the list of authorized services for
 		 authorized data*/
-		discountCodeAPIRepository.deleteAll();
         List<DiscountCodeAPI> discountCodeAPIS = Utils.getAllMethodNames(DiscountCodeController.class);
         saveIfNotExits(discountCodeAPIS);
 

@@ -39,6 +39,11 @@ public class ResponseManagerImpl implements ResponseManager {
     }
 
     @Override
+    public Response getSuccessResponse(String description) {
+        return getResponse(HttpStatus.OK, SUCCESS, description);
+    }
+
+    @Override
     public Response getCreatedResponse(){
         return getResponse(HttpStatus.CREATED, SUCCESS, CREATED_DESCRIPTION);
     }
@@ -49,8 +54,13 @@ public class ResponseManagerImpl implements ResponseManager {
     }
 
     @Override
-    public Response getDeletedResponse(){
+    public Response getDeletedResponse() {
         return getResponse(HttpStatus.OK, DELETED, DELETED_DESCRIPTION);
+    }
+
+    @Override
+    public Response getDeletedResponse(String description){
+        return getResponse(HttpStatus.OK, DELETED, description);
     }
 
     @Override
@@ -59,23 +69,33 @@ public class ResponseManagerImpl implements ResponseManager {
     }
 
     @Override
-    public Response getInvalidDataResponse(){
-        return getResponse(HttpStatus.BAD_REQUEST, ERROR, INVALID_DATA_DESCRIPTION);
+    public Response getInvalidRequestResponse(String description){
+        return getResponse(HttpStatus.BAD_REQUEST, ERROR, description);
     }
 
     @Override
     public Response getNotFoundResponse(){
-        return getResponse(HttpStatus.BAD_REQUEST, ERROR, NOT_FOUND_DESCRIPTION);
+        return getResponse(HttpStatus.NOT_FOUND, ERROR, NOT_FOUND_DESCRIPTION);
     }
 
     @Override
     public Response getNotFoundResponse(String description){
-        return getResponse(HttpStatus.BAD_REQUEST, ERROR, description);
+        return getResponse(HttpStatus.NOT_FOUND, ERROR, description);
     }
 
     @Override
     public Response getErrorResponse(String message, HttpStatus statusCode) {
         return getResponse(statusCode, ERROR, message);
+    }
+
+    @Override
+    public Response getInternalServerErrorResponse() {
+        return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+    }
+
+    @Override
+    public Response getInternalServerErrorResponse(String description) {
+        return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, ERROR, description);
     }
 
     @Override
