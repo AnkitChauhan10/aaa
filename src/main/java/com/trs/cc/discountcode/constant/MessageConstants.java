@@ -20,6 +20,7 @@ public class MessageConstants {
     public static final String INVALID_TOKEN_SIGNATURE = "INVALID_TOKEN_SIGNATURE";
     public static final String INVALID_TOKEN = "INVALID_TOKEN";
     public static final String TOKEN_NOT_FOUND = "TOKEN_NOT_FOUND";
+    public static final String TOKEN_EXPIRED ="TOKEN_EXPIRED";
 
     public static final String DISCOUNT_CODE_DELETED_SUCCESSFULLY = "DISCOUNT_CODE_DELETED_SUCCESSFULLY";
     public static final String DISCOUNT_CODE_ACCEPTED_SUCCESSFULLY = "DISCOUNT_CODE_ACCEPTED_SUCCESSFULLY";
