@@ -74,19 +74,26 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 			requestSession.setLocale(Locale.forLanguageTag(localeLanguage));
 		}
 
-
-
 		HandlerMethod method = (HandlerMethod) handler;
 		RequestMapping rm = method.getMethodAnnotation(RequestMapping.class);
 		logger.info("Session Id (In Interceptor) :"+requestSession.getR());
 		// If This is Resource Request then always return true
 
+		String jwtToken = request.getHeader(CustomHTTPHeaders.TOKEN.toString());
+
 		// IF ANONYMOUS Role then Pass the role
 		if(discountCodeAPIService.hasAccess(Collections.singletonList(Roles.ANONYMOUS.toString()), method.getMethod().getName())){
-			return true;
+			try {
+				if(jwtToken!=null) {
+					JWTUser user = tokenUtil.getJwtUserFromToken(jwtToken);
+					if (user != null) {
+						requestSession.setJwtUser(user);
+					}
+				}
+			}catch (Exception ignored){}
+			return checkTokenIsExpired(jwtToken,response);
 		}
 
-		String jwtToken = request.getHeader(CustomHTTPHeaders.TOKEN.toString());
 		if(jwtToken == null){
 			logger.error("Authentication not present in the request");
 			Response errorResponse = responseManager.getResponse(HttpStatus.UNAUTHORIZED,
@@ -109,19 +116,36 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 			}
 
 		}catch (Exception e){
-			logger.error("Invalid Token Signature!! ");
+			logger.error("Invalid Token Signature!!");
 			Response errorResponse = responseManager.getResponse(HttpStatus.UNAUTHORIZED,
 					MessageConstants.INVALID_TOKEN_SIGNATURE, MessageConstants.INVALID_TOKEN_SIGNATURE);
 			// if Token is invalid or signature is invalid
 			sendJSONResponse(errorResponse, response, HttpServletResponse.SC_UNAUTHORIZED);
 			return false;
-
 		}
 
 		requestSession.setJwtUser(user);
+		return checkTokenIsExpired(jwtToken,response);
+	}
+	private boolean checkTokenIsExpired(String jwtToken,HttpServletResponse response) throws IOException {
+		if(!StringUtils.isEmpty(jwtToken)){
+			boolean expired;
+			try {
+				expired = tokenUtil.isTokenExpired(jwtToken);
+			}catch (Exception e){
+				expired = true;
+			}
+
+			if(expired){
+				logger.error("Token Expired!!");
+				Response errorResponse = new Response(HttpStatus.UPGRADE_REQUIRED,
+						MessageConstants.TOKEN_EXPIRED, MessageConstants.TOKEN_EXPIRED);
+				// if Token is invalid or signature is invalid
+				sendJSONResponse(errorResponse, response, HttpServletResponse.SC_UNAUTHORIZED);
+				return false;
+			}
+		}
 		return true;
-
-
 	}
 
 
