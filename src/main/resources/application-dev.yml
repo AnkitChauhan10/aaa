@@ -6,4 +6,4 @@ spring:
       password:  D5NYJq8M2W
       database: cc_discount_code
       port: 27017
-      host: 103.205.140.61
+      host: staging-api.thecommunity-connect.com  #44.238.64.77
