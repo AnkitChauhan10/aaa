@@ -3,16 +3,15 @@ package com.trs.cc.discountcode.aspects;
 
 import com.trs.cc.discountcode.decorator.RequestSession;
 import com.trs.cc.discountcode.model.PathTrail;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Date;
 
@@ -22,11 +21,15 @@ public class PathTrailUpdateAspect {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    RequestSession requestSession;
+    ApplicationContext applicationContext;
+
 
     @Around("execution(* com.trs.cc.discountcode.repository.*.save(..))")
-    Object pathTrailAround(ProceedingJoinPoint joinPoint) throws Throwable{
-        logger.info("Session Id (IN Aspect) :"+requestSession.getR());
+    Object pathTrailArround(ProceedingJoinPoint joinPoint) throws Throwable{
+        if(RequestContextHolder.getRequestAttributes() == null){
+            return joinPoint.proceed(joinPoint.getArgs());
+        }
+        RequestSession requestSession = applicationContext.getBean(RequestSession.class);
         if(joinPoint.getArgs().length ==  1 ){
             Object pathTrail = joinPoint.getArgs()[0];
             if(pathTrail instanceof PathTrail){
