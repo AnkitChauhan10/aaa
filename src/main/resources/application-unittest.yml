@@ -1,13 +1,12 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://community_admin:D5NYJq8M2W@main-cluster.hk9ov.mongodb.net/cc_discount_code_test?retryWrites=true&w=majority
+      authentication-database: admin
+      username: community_admin
+      password:  D5NYJq8M2W
       database: cc_discount_code_test
-#      authentication-database: admin
-#      username: community_admin
-#      password:  D5NYJq8M2W
-#      port: 27017
-#      host: staging-api.thecommunity-connect.com  #44.238.64.77
+      port: 27017
+      host: staging-api.thecommunity-connect.com  #44.238.64.77
 
 trs:
   env: UNIT_TEST
