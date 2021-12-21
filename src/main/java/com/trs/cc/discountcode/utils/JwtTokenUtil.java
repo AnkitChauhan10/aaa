@@ -4,9 +4,8 @@ import com.trs.cc.discountcode.model.JWTUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +14,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 public class JwtTokenUtil implements Serializable {
-
-    Logger logger = LoggerFactory.getLogger(this.getClass());
 
    // Two Month Expiration Time                       // Month     // Hour       // Minute      // SECOND
     public static final long JWT_TOKEN_VALIDITY =  2 *     30  *       24       *      60       *     60      ;
@@ -64,7 +62,7 @@ public class JwtTokenUtil implements Serializable {
 //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
 //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-        logger.info("Secret Key"+secret);
+        log.info("Secret Key"+secret);
         
         return Jwts.builder()
 

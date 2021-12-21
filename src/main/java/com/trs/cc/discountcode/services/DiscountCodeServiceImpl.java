@@ -13,8 +13,6 @@ import com.trs.cc.discountcode.utils.JwtTokenUtil;
 import com.trs.cc.discountcode.utils.NullAwareBean;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +36,6 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private BeanUtilsBean copyNotNullProps = new NullAwareBean();
 
     @Override

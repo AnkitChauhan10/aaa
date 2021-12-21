@@ -2,12 +2,10 @@ package com.trs.cc.discountcode.listener;
 
 import com.trs.cc.discountcode.controller.DiscountCodeController;
 import com.trs.cc.discountcode.model.DiscountCodeAPI;
-import com.trs.cc.discountcode.model.DiscountCodeAdminConfiguration;
 import com.trs.cc.discountcode.repository.DiscountCodeAPIRepository;
 import com.trs.cc.discountcode.repository.DiscountCodeAdminConfigRepository;
 import com.trs.cc.discountcode.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @Component
 public class ApplicationStartUpEventListener {
 
@@ -24,8 +23,6 @@ public class ApplicationStartUpEventListener {
 
     @Value("${trs.defaults.pagingLimit}")
     String pageLimit;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     DiscountCodeAdminConfigRepository discountCodeAdminConfigRepository;
@@ -36,8 +33,8 @@ public class ApplicationStartUpEventListener {
 
     @EventListener()
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        logger.debug("Landed in here " + database);
-        logger.info(database);
+        log.debug("Landed in here " + database);
+        log.info(database);
         // When application is run for the first time the minimal Auth Config needs to
         // be created from here
         /*List<DiscountCodeAdminConfiguration> configs = discountCodeAdminConfigRepository.findAll();
@@ -67,7 +64,7 @@ public class ApplicationStartUpEventListener {
     private void saveIfNotExits(List<DiscountCodeAPI> apis) {
         apis.forEach(api -> {
             if (!discountCodeAPIRepository.existsByName(api.getName())) {
-                logger.info("Inserting API : {}", api.getName());
+                log.info("Inserting API : {}", api.getName());
                 discountCodeAPIRepository.insert(api);
             }
         });
