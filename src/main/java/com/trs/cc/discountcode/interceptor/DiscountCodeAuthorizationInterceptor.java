@@ -10,8 +10,7 @@ import com.trs.cc.discountcode.services.ResponseManager;
 import com.trs.cc.discountcode.utils.CustomHTTPHeaders;
 import com.trs.cc.discountcode.utils.JwtTokenUtil;
 import com.trs.cc.discountcode.utils.Roles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -37,6 +36,8 @@ import java.util.Locale;
  * @author TRS
  *
  */
+
+@Slf4j
 @Component
 public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdapter {
 
@@ -51,8 +52,6 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 
 	@Autowired
 	ResponseManager responseManager;
-
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -76,7 +75,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 
 		HandlerMethod method = (HandlerMethod) handler;
 		RequestMapping rm = method.getMethodAnnotation(RequestMapping.class);
-		logger.info("Session Id (In Interceptor) :"+requestSession.getR());
+		log.info("Session Id (In Interceptor) :"+requestSession.getR());
 		// If This is Resource Request then always return true
 
 		String jwtToken = request.getHeader(CustomHTTPHeaders.TOKEN.toString());
@@ -95,7 +94,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 		}
 
 		if(jwtToken == null){
-			logger.error("Authentication not present in the request");
+			log.error("Authentication not present in the request");
 			Response errorResponse = responseManager.getResponse(HttpStatus.UNAUTHORIZED,
 					MessageConstants.AUTHORIZATION_IS_NOT_PRESENT_IN_REQUEST,
 					MessageConstants.AUTHORIZATION_IS_NOT_PRESENT_IN_REQUEST);
@@ -107,7 +106,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 		try{
 			user = tokenUtil.getJwtUserFromToken(jwtToken);
 			if(!discountCodeAPIService.hasAccess(user.getRole(), method.getMethod().getName())){
-				logger.error("Role is not allowed");
+				log.error("Role is not allowed");
 				Response errorResponse = responseManager.getResponse(HttpStatus.FORBIDDEN,
 						MessageConstants.ROLE_IS_NOT_ALLOWED, MessageConstants.ROLE_IS_NOT_ALLOWED);
 				// if Role is not allowed
@@ -116,7 +115,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 			}
 
 		}catch (Exception e){
-			logger.error("Invalid Token Signature!!");
+			log.error("Invalid Token Signature!!");
 			Response errorResponse = responseManager.getResponse(HttpStatus.UNAUTHORIZED,
 					MessageConstants.INVALID_TOKEN_SIGNATURE, MessageConstants.INVALID_TOKEN_SIGNATURE);
 			// if Token is invalid or signature is invalid
@@ -137,7 +136,7 @@ public class DiscountCodeAuthorizationInterceptor extends HandlerInterceptorAdap
 			}
 
 			if(expired){
-				logger.error("Token Expired!!");
+				log.error("Token Expired!!");
 				Response errorResponse = new Response(HttpStatus.UPGRADE_REQUIRED,
 						MessageConstants.TOKEN_EXPIRED, MessageConstants.TOKEN_EXPIRED);
 				// if Token is invalid or signature is invalid

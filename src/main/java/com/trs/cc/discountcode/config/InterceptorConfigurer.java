@@ -1,14 +1,12 @@
 package com.trs.cc.discountcode.config;
 
 import com.trs.cc.discountcode.interceptor.DiscountCodeAuthorizationInterceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 /**
  * Configure Interceptors on application startup. each interceptor is added in the order of first come first served.
@@ -20,13 +18,11 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
  *
  */
 
+@Slf4j
 @Configuration
 public class InterceptorConfigurer implements WebMvcConfigurer {
  
 	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
 	@Autowired
 	DiscountCodeAuthorizationInterceptor discountCodeAuthorizationInterceptor;
 	
@@ -42,7 +38,7 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
 				"/configuration/ui",
 				"/error"
 		);
-		logger.info("Adding Login authentication interceptor");
+		log.info("Adding Login authentication interceptor");
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}
 
