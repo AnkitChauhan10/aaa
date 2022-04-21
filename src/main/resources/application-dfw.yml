@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://dfwgs_prod_mongoadmin:wT1zr0VsYA5LZnBs@dfwgs.qqisk.mongodb.net/cc_discount_code?retryWrites=true&w=majority
+      database: cc_discount_code
