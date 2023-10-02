@@ -1,0 +1,27 @@
+version: '3'
+services:
+ 
+  spring-app:
+    image: openjdk:11-jre-slim
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    command: ["java", "-jar", "C:Users/hp/Desktop/project/ccdiscountcode/target/discountcode-0.0.1-SNAPSHOT.jar"]
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_HOST: staging-api.thecommunity-connect.com
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: admin
+      SPRING_DATA_MONGODB_USERNAME: community_admin
+      SPRING_DATA_MONGODB_PASSWORD: D5NYJq8M2W
+
+ 
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: community_admin
+      MONGO_INITDB_ROOT_PASSWORD: D5NYJq8M2W
